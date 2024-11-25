@@ -24,3 +24,57 @@ export const inputStyling = StyleSheet.create({
   marginVertical: 10,
   marginHorizontal: 20,
 });
+
+export const formheading = {
+  fontSize: 24,
+  fontWeight: '500',
+  textAlign: 'center',
+  backgroundColor: colors.color3,
+  color: colors.color2,
+  padding: 5,
+  borderRadius: 5,
+};
+
+export const inputOptions = {
+  style: inputStyling,
+  mode: 'outlined',
+  activeOutlineColor: colors.color1
+};
+
+export const formStyles = StyleSheet.create({
+  container: {
+      backgroundColor: colors.color3,
+      padding: 20,
+      borderRadius: 10,
+      marginVertical: 20,
+      flex: 1,
+      justifyContent: 'center',
+      elevation: 10,
+  },
+  forget: {
+      color: colors.color2,
+      marginVertical: 10,
+      marginHorizontal: 20,
+      alignSelf: 'flex-end',
+      fontWeight: '100',
+  },
+  btn: {
+      backgroundColor: colors.color1,
+      margin:20,
+      padding:6,
+  },
+  or: {
+      alignSelf: 'center',
+      fontSize: 20,
+      fontWeight: '100',
+      color: colors.color2,
+  },
+  link: {
+      alignSelf: 'center',
+      fontSize: 18,
+      textTransform: 'uppercase',
+      color: colors.color2,
+      marginVertical: 10,
+      marginHorizontal: 20,
+  },
+});
