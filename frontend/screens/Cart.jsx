@@ -79,6 +79,7 @@ const Cart = () => {
             {
                 cartItems.map((i,index)=>(
                     <CartItem 
+                    navigate={navigate}
                     key={i.product} 
                     id={i.product}
                     name={i.name}
