@@ -19,12 +19,13 @@ const categories = [{ category: "Nice", _id: 'sdnjskad' },
     { category: "Nice7", _id: 'sdnjskaergsvtrgad' },
   ];
 
-const products = [
+export const products = [
     {
     price: 112,
     stock: 23,
     name: 'Shoe',
-    _id: 'Sadshjbdsd',
+    _id: 'wefadsfaer',
+    category:'Clothing',
     images: [{
         url: 'https://th.bing.com/th/id/R.588c91bfba1ed32b8b0ae41dc7fb7c4d?rik=B%2fHZWgczMJDP0Q&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fshoes-png-running-shoes-png-image-1200.png&ehk=fzyBl6G%2bpf7aJ7Q57f2XNebhdNDvdl3LgXoS9ITvZ8U%3d&risl=&pid=ImgRaw&r=0',
     },],
@@ -34,6 +35,7 @@ const products = [
     stock: 21,
     name: 'IPhone',
     _id: 'hgtyjytj',
+    category:'Tech',
     images: [{
         url: 'https://th.bing.com/th/id/R.7e84d93b14f1d605078fdf072d8303f0?rik=H7%2b1%2flA3DLvgwA&pid=ImgRaw&r=0',
     },],

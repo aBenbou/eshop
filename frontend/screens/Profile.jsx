@@ -49,7 +49,7 @@ const Profile = ({ navigation }) => {
     <>
       <View style={defaultStyle}>
         {/* Heading */}
-        <View style={{ marginBottom: 20 }}>
+        <View style={{ paddingTop: 70, marginBottom: 20 }}>
           <Text style={formheading}>Profile</Text>
         </View>
         {/* Loading */}
