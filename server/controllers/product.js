@@ -3,6 +3,7 @@ import { Product } from "../models/product.js";
 import { getDataUri } from "../utils/features.js";
 import ErrorHandler from "../utils/error.js";
 import { v2 as cloudinary } from "cloudinary";
+import { Category } from "../models/category.js";
 
 
 
@@ -16,6 +17,20 @@ export const getAllProducts = asyncError(async (req, res, next) => {
     res.status(200).json({
       success: true,
       products,
+    });
+  });
+
+
+  export const getAdminProducts = asyncError(async (req, res, next) => {
+    const products = await Product.find({});
+  
+    const outOfStock = products.filter((i) => i.stock === 0);
+  
+    res.status(200).json({
+      success: true,
+      products,
+      outOfStock: outOfStock.length,
+      inStock: products.length - outOfStock.length,
     });
   });
 
@@ -138,5 +153,45 @@ export const getAllProducts = asyncError(async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Product Deleted Successfully",
+    });
+  });
+
+
+
+
+  export const addCategory = asyncError(async (req, res, next) => {
+    await Category.create(req.body);
+  
+    res.status(201).json({
+      success: true,
+      message: "Category Added Successfully",
+    });
+  });
+  
+  export const getAllCategories = asyncError(async (req, res, next) => {
+    const categories = await Category.find({});
+  
+    res.status(200).json({
+      success: true,
+      categories,
+    });
+  });
+  
+  export const deleteCategory = asyncError(async (req, res, next) => {
+    const category = await Category.findById(req.params.id);
+    if (!category) return next(new ErrorHandler("Category Not Found", 404));
+    const products = await Product.find({ category: category._id });
+  
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
+      product.category = undefined;
+      await product.save();
+    }
+  
+    await Category.deleteOne({ _id: category._id });
+  
+    res.status(200).json({
+      success: true,
+      message: "Category Deleted Successfully",
     });
   });
