@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { colors, defaultStyle, formheading } from "../../styles/styles";
 import Header from "../../components/Header";
 import ImageCard from "../../components/ImageCard";
@@ -24,6 +24,12 @@ const ProductImages = ({ navigation, route }) => {
     
   };
 
+  useEffect(() => {
+    if (route.params?.image) {
+      setImage(route.params.image);
+      setImageChanged(true);
+    }
+  }, [route.params]);
 
   return (
     <View
