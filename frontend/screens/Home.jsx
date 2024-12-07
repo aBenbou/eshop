@@ -1,76 +1,66 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from 'react';
 import { colors, defaultStyle } from "../styles/styles";
 import Header from "../components/Header";
 import { Avatar, Button } from "react-native-paper";
 import SearchModal from '../components/SearchModal';
 import ProductCard from "../components/ProductCard";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Footer from "../components/Footer";
 import Heading from "../components/Heading";
 
-const categories = [{ category: "Nice", _id: 'sdnjskad' },
-    { category: "Nice2", _id: 'sgaer' },
-    { category: "Nice3", _id: 'asgsehsrt' },
-    { category: "Nice4", _id: 'bsryjerty' },
-    { category: "Nice5", _id: 'sdnjskggfsdsfsad' },
-    { category: "Nice6", _id: 'ahtyrj' },
-    { category: "Nice7", _id: 'sdnjskaergsvtrgad' },
-  ];
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../redux/actions/productAction";
+import { useSetCategories } from "../utils/hooks";
 
-export const products = [
-    {
-    price: 112,
-    stock: 23,
-    name: 'Shoe',
-    _id: 'wefadsfaer',
-    category:'Clothing',
-    images: [{
-        url: 'https://th.bing.com/th/id/R.588c91bfba1ed32b8b0ae41dc7fb7c4d?rik=B%2fHZWgczMJDP0Q&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fshoes-png-running-shoes-png-image-1200.png&ehk=fzyBl6G%2bpf7aJ7Q57f2XNebhdNDvdl3LgXoS9ITvZ8U%3d&risl=&pid=ImgRaw&r=0',
-    },],
-},
-{
-    price: 989,
-    stock: 21,
-    name: 'IPhone',
-    _id: 'hgtyjytj',
-    category:'Tech',
-    images: [{
-        url: 'https://th.bing.com/th/id/R.7e84d93b14f1d605078fdf072d8303f0?rik=H7%2b1%2flA3DLvgwA&pid=ImgRaw&r=0',
-    },],
-},
-];
 
 const Home = () => {
   
-
   const [category, setCategory] = useState('')
   const [activeSearch, setActiveSearch] = useState(false);
-  const [searchQuery, setsearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState([]);
+
 
   const navigate = useNavigation()
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
-  const categoryButtonHandler= (id) => {
+  const { products } = useSelector((state) => state.product);
+
+  const categoryButtonHandler = (id) => {
     setCategory(id);
   };
 
 
-const addToCartHandler = (id)=> {
-    console.log('add to cart', id);
-};
+  const addToCartHandler = (id) => {
+    console.log("Add to Cart", id);
+  };
+
+  useSetCategories(setCategories, isFocused);
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      dispatch(getAllProducts(searchQuery, category));
+    }, 500);
+
+    return () => {
+      clearTimeout(timeOutId);
+    };
+  }, [dispatch, searchQuery, category, isFocused]);
 
   return (
 <>
 {
     activeSearch && (
-        <SearchModal searchQuery={searchQuery} setsearchQuery={setsearchQuery} setActiveSearch={setActiveSearch} products={products} />
+        <SearchModal searchQuery={searchQuery} setSearchQuery={setSearchQuery} setActiveSearch={setActiveSearch} products={products} />
     )
 }
 
-    <View style={{
-      ...defaultStyle
-      }}
+    <View style={
+      defaultStyle
+      }
       >
       <Header />
       {/* Heading Row */}

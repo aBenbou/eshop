@@ -8,14 +8,14 @@ import { Headline, Searchbar } from 'react-native-paper';
 const SearchModal = ({
     searchQuery,
     setActiveSearch,
-    setsearchQuery,
+    setSearchQuery,
     products = []
 }) => {
 
     const navigation = useNavigation();
 
     const backAction = () => {
-        setsearchQuery('');
+        setSearchQuery('');
         setActiveSearch(false);
         return true;
     };
@@ -39,7 +39,7 @@ const SearchModal = ({
             <SafeAreaView>
                 <Searchbar 
                     placeholder='Search...' 
-                    onChangeText={(query) => setsearchQuery(query)}
+                    onChangeText={(query) => setSearchQuery(query)}
                     value={searchQuery}
                     style={{
                         marginTop: 20,
