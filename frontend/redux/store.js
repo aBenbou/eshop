@@ -8,4 +8,4 @@ export const store = configureStore({
     },
   });
 
-export const server = "http://localhost:5000/api/v1";
+export const server = "https://eshop-aymane.onrender.com/api/v1";
