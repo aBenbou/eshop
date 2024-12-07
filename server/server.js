@@ -1,10 +1,16 @@
 import {app} from "./app.js";
 import { connectDB } from "./data/database.js";
 import {v2 as cloudinary} from "cloudinary";
+import Stripe from "stripe";
 
 
 
 connectDB();
+
+
+export const stripe = new Stripe(
+    process.env.STRIPE_API_SECRET
+);
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
