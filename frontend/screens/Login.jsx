@@ -1,23 +1,58 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { colors, defaultStyle, formheading, inputOptions, formStyles } from '../styles/styles';
 import { Button, TextInput } from 'react-native-paper';
 import Footer from '../components/Footer';
+import Toast from 'react-native-toast-message';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/actions/userActions';
 
 const Login = ({navigation}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const loading = false;
+
+    const dispatch = useDispatch();
+    const {loading, message, error, isAuthenticated} = useSelector(
+        (state) => state.user
+    );
+
+    // console.log(isAuthenticated);
+
+    useEffect(() =>{
+        if(error){
+            Toast.show({
+                type:"error",
+                text1:error
+            });
+            dispatch({
+                type:"clearError"
+            })
+        }
+        if(message){
+            navigation.navigate("profile");
+            Toast.show({
+                type:"success",
+                text1:message
+            });
+            dispatch({
+                type:"clearMessage"
+            })
+        }
+    },[error, message, dispatch])
+
+    // console.log(message, error, isAuthenticated);
 
     const submitHandler = ()=> {
-        alert ('Nice');
+        // alert ('Nice');
+        dispatch(login(email, password));
     };
     
 
     return (
         <>
-        <View style={{...defaultStyle, backgroundColor:colors.color2}}>
+        <View style={defaultStyle}>
             <View style={{ marginBottom: 20 }}>
                 <Text style={formheading}>Login</Text>
             </View>
