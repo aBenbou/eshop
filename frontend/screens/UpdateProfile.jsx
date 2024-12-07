@@ -3,23 +3,30 @@ import React, { useState } from 'react';
 import { colors, defaultStyle, formheading, inputOptions, formStyles, defaultImg } from '../styles/styles';
 import { Button, TextInput } from 'react-native-paper';
 import Header from '../components/Header';
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfile } from "../redux/actions/otherAction";
+import { useMessageAndErrorOther } from "../utils/hooks";
 
 
 const UpdateProfile = ({ navigation }) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [country, setCountry] = useState('');
-    const [pinCode, setPinCode] = useState('');
 
-    const loading = false;
+    const { user } = useSelector((state) => state.user);
+    
 
-    const disableBtn = !name || !email  || !address || !city || !country || !pinCode;
+    const [name, setName] = useState(user?.name);
+    const [email, setEmail] = useState(user?.email);
+    const [address, setAddress] = useState(user?.address);
+    const [city, setCity] = useState(user?.city);
+    const [country, setCountry] = useState(user?.country);
+    const [pinCode, setPinCode] = useState(user?.pinCode.toString());
+
+    const dispatch = useDispatch();
+
+    const loading = useMessageAndErrorOther(dispatch, navigation, "profile");
 
     const submitHandler = () => {
-        alert('Nice');
-        
+        // alert('Nice');
+        dispatch(updateProfile(name, email, address, city, country, pinCode));
     };
 
 
@@ -84,7 +91,6 @@ const UpdateProfile = ({ navigation }) => {
                     <Button
                         loading={loading}
                         textColor={colors.color2}
-                        disabled={disableBtn}
                         style={formStyles.btn}
                         onPress={submitHandler}
                     >

@@ -1,24 +1,27 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { colors, defaultStyle, formheading } from '../styles/styles';
+import { colors, defaultImg, defaultStyle, formheading } from '../styles/styles';
 import { Avatar, Button } from 'react-native-paper';
 import ButtonBox from '../components/ButtonBox';
 import Footer from '../components/Footer';
 import Loader from '../components/Loader';
-import { useDispatch } from 'react-redux';
-import { logout } from '../redux/actions/userActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadUser, logout } from '../redux/actions/userActions';
 import { useMessageAndErrorUser } from '../utils/hooks';
+import { useIsFocused } from '@react-navigation/native';
 
-
-const user = {
-  name: 'Aymane',
-  email: 'aymane@email.com'
-};
 
 const Profile = ({ navigation, route }) => {
-  const [avatar, setAvatar] = useState(null);
+
+  const {user} = useSelector(state => state.user);
+
+  const [avatar, setAvatar] = useState(
+    user?.avatar ? user.avatar.url : defaultImg
+  );
 
   const dispatch = useDispatch();
+
+  const isFocused = useIsFocused()
 
   const loading = useMessageAndErrorUser(navigation, dispatch, "login");
 
@@ -57,7 +60,9 @@ const Profile = ({ navigation, route }) => {
       setAvatar(route.params.image);
       //dispatch here
     }
-  }, [route.params]);
+
+    dispatch(loadUser())
+  }, [route.params, dispatch, isFocused]);
 
   return (
     <>
@@ -82,7 +87,14 @@ const Profile = ({ navigation, route }) => {
               <View>
                 <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-between' }}>
                   <ButtonBox handler={navigateHandler} text={'Orders'} icon={'format-list-bulleted-square'} />
-                  <ButtonBox handler={navigateHandler} reverse={true} text={'Admin'} icon={'view-dashboard'} />
+                  {user?.role === "admin" && (
+                  <ButtonBox
+                    handler={navigateHandler}
+                    icon={"view-dashboard"}
+                    text={"Admin"}
+                    reverse={true}
+                  />
+                )}
                   <ButtonBox handler={navigateHandler} text={'Profile'} icon={'pencil'} />
                 </View>
                 <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-evenly' }}>
