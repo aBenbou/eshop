@@ -7,13 +7,22 @@ import ButtonBox from "../../components/ButtonBox";
 import ProductListHeading from "../../components/ProductListHeading";
 import ProductListItem from "../../components/ProductListItem";
 import Chart from "../../components/Chart";
-import { products } from "../Home";
+import { useAdminProducts, useMessageAndErrorOther } from "../../utils/hooks";
+// import { products } from "../Home";
+import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 
 const AdminPanel = ({ navigation }) => {
   
 
-  const loading = false;
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  const { loading, products, inStock, outOfStock } = useAdminProducts(
+    dispatch,
+    isFocused
+  );
 
   const navigationHandler = (text) => {
     switch (text) {
@@ -56,7 +65,7 @@ const AdminPanel = ({ navigation }) => {
               alignItems: "center",
             }}
           >
-            <Chart inStock={12} outOfStock={2} />
+            <Chart inStock={inStock} outOfStock={outOfStock} />
           </View>
 
           <View>
@@ -102,7 +111,7 @@ const AdminPanel = ({ navigation }) => {
                     price={item.price}
                     stock={item.stock}
                     name={item.name}
-                    category={item.category}
+                    category={item.category?.category}
                     imgSrc={item.images[0].url}
                   />
                 ))}

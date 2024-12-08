@@ -3,34 +3,43 @@ import React, { useState } from "react";
 import { colors, defaultStyle, formheading, inputOptions } from "../../styles/styles";
 import Header from "../../components/Header";
 import { Avatar, Button, TextInput } from "react-native-paper";
+import { useMessageAndErrorOther, useSetCategories } from "../../utils/hooks";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { addCategory, deleteCategory } from "../../redux/actions/otherAction";
 
-const categories = [
-    {
-        name: 'Phone',
-        _id: 'uyhgwufke'
-    },
-    {
-        name: 'Clothing',
-        _id: 'uyhgaDCwufke'
-    },
-    {
-        name: 'Tech',
-        _id: 'uyhgwVSTRufke'
-    }
-];
+// const categories = [
+//     {
+//         name: 'Phone',
+//         _id: 'uyhgwufke'
+//     },
+//     {
+//         name: 'Clothing',
+//         _id: 'uyhgaDCwufke'
+//     },
+//     {
+//         name: 'Tech',
+//         _id: 'uyhgwVSTRufke'
+//     }
+// ];
   
   const Categories = ({ navigation }) => {
     const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   
-  
-    const loading = false;
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+
+
+  useSetCategories(setCategories, isFocused);
+  const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
   
     const deleteHandler = (id) => {
-      console.log(`Deleting Category with ID, ${id}`);
+      dispatch(deleteCategory(id));
     };
   
     const submitHandler = () => {
-      
+      dispatch(addCategory(category));
     };
   
     return (
@@ -52,7 +61,7 @@ const categories = [
           >
             {categories.map((i) => (
               <CategoryCard
-                name={i.name}
+                name={i.category}
                 id={i._id}
                 key={i._id}
                 deleteHandler={deleteHandler}

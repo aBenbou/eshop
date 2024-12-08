@@ -5,39 +5,43 @@ import Header from "../components/Header";
 import Loader from "../components/Loader";
 import { Headline } from "react-native-paper";
 import OrderItem from "../components/OrderItem";
+import { useGetOrders } from "../utils/hooks";
+import { useIsFocused } from "@react-navigation/native";
 
-export const orders = [
-  {
-    _id: "uyhgyitrf",
-    shippingInfo: {
-      address: "3 rue Abda",
-      city: "Rabat",
-      country: "Morocco",
-      pinCode: "3232",
-    },
-    createdAt: "12-2-2024T2343",
-    orderStatus: "Processing",
-    paymentMethod: "COD",
-    totalAmount: 20000,
-  },
-  {
-    _id: "uyhgyiefgtrf",
-    shippingInfo: {
-      address: "32 rue Sadaqa",
-      city: "Rabat",
-      country: "Morocco",
-      pinCode: "4343",
-    },
-    createdAt: "12-2-2024T2243",
-    orderStatus: "Processing",
-    paymentMethod: "ONLINE",
-    totalAmount: 200,
-  },
-];
+
+// export const orders = [
+//   {
+//     _id: "uyhgyitrf",
+//     shippingInfo: {
+//       address: "3 rue Abda",
+//       city: "Rabat",
+//       country: "Morocco",
+//       pinCode: "3232",
+//     },
+//     createdAt: "12-2-2024T2343",
+//     orderStatus: "Processing",
+//     paymentMethod: "COD",
+//     totalAmount: 20000,
+//   },
+//   {
+//     _id: "uyhgyiefgtrf",
+//     shippingInfo: {
+//       address: "32 rue Sadaqa",
+//       city: "Rabat",
+//       country: "Morocco",
+//       pinCode: "4343",
+//     },
+//     createdAt: "12-2-2024T2243",
+//     orderStatus: "Processing",
+//     paymentMethod: "ONLINE",
+//     totalAmount: 200,
+//   },
+// ];
 
 
 const Orders = () => {
-    const loading = false;
+  const isFocused = useIsFocused();
+  const { loading, orders } = useGetOrders(isFocused);
 
 
   return (
