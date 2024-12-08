@@ -4,6 +4,10 @@ import { colors, defaultStyle, formheading } from "../../styles/styles";
 import Header from "../../components/Header";
 import ImageCard from "../../components/ImageCard";
 import { Avatar, Button } from "react-native-paper";
+import { useMessageAndErrorOther } from "../../utils/hooks";
+import { useDispatch } from "react-redux";
+import mime from "mime";
+import { deleteProductImage, updateProductImage,} from "../../redux/actions/otherAction";
 
 
 const ProductImages = ({ navigation, route }) => {
@@ -12,16 +16,24 @@ const ProductImages = ({ navigation, route }) => {
   const [image, setImage] = useState(null);
   const [imageChanged, setImageChanged] = useState(false);
 
-  
+  const dispatch = useDispatch();
+  const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
 
-  const loading = false;
-  const deleteHandler = (id) => {
-    console.log('Image Id', id);
-    console.log('Product Id', productId);
+
+  const deleteHandler = (imageId) => {
+    dispatch(deleteProductImage(productId, imageId));
   };
 
   const submitHandler = () => {
-    
+    const myForm = new FormData();
+
+    myForm.append("file", {
+      uri: image,
+      type: mime.getType(image),
+      name: image.split("/").pop(),
+    });
+
+    dispatch(updateProductImage(productId, myForm));
   };
 
   useEffect(() => {

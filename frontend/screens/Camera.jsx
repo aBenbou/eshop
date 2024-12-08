@@ -19,7 +19,7 @@ const CameraComponent = ({ navigation, route }) => {
 
     const data = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [1, 1],
+      //aspect: [1, 1],
       quality: 1,
     });
 
