@@ -13,6 +13,7 @@ import Heading from "../components/Heading";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../redux/actions/productAction";
 import { useSetCategories } from "../utils/hooks";
+import Toast from "react-native-toast-message";
 
 
 const Home = () => {
@@ -34,8 +35,27 @@ const Home = () => {
   };
 
 
-  const addToCartHandler = (id) => {
-    console.log("Add to Cart", id);
+  const addToCartHandler = (id, name, price, image, stock) => {
+    if (stock === 0)
+      return Toast.show({
+        type: "error",
+        text1: "Out Of Stock",
+      });
+    dispatch({
+      type: "addToCart",
+      payload: {
+        product: id,
+        name,
+        price,
+        image,
+        stock,
+        quantity: 1,
+      },
+    });
+    Toast.show({
+      type: "success",
+      text1: "Added To Cart",
+    });
   };
 
   useSetCategories(setCategories, isFocused);

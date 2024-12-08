@@ -22,25 +22,6 @@ export const iconOptions = {
 }
 
 const ProductDetails = ({ route: { params } }) => {
-    // console.log(params.id);
-
-    // const name = "iPhone";
-    // const price = 980;
-    // const stock = 5;
-    // const description = 'Experience lightning-fast performance with the A18 Bionic chip and a stunning 6.8-inch Super Retina XDR display with Dynamic ProMotion for ultra-smooth visuals. Capture every moment with the advanced 48MP triple-lens camera, offering up to 10x optical zoom and enhanced low-light performance. Enjoy all-day battery life with fast charging and the latest iOS 17 for top-notch security. Built with premium materials and IP68 water resistance, the iPhone 16 combines durability with elegance.';
-    // const isCarousel = useRef(null);
-    // const [quantity, setQuantity] = useState(1);
-
-    // const images = [
-    //     {
-    //         id: 'wfeqwv',
-    //         url: 'https://th.bing.com/th/id/R.7e84d93b14f1d605078fdf072d8303f0?rik=H7%2b1%2flA3DLvgwA&pid=ImgRaw&r=0',
-    //     },
-    //     {
-    //         id: 'htrd',
-    //         url: 'https://purepng.com/public/uploads/large/purepng.com-apple-iphone-xappleapple-iphonephonesmartphonemobile-devicetouch-screeniphone-xiphone-10electronicsobjects-2515306895701eqxj.png',
-    //     },
-    // ];
 
     const {
         product: { name, price, stock, description, images },
@@ -51,25 +32,40 @@ const ProductDetails = ({ route: { params } }) => {
       const dispatch = useDispatch();
       const isFocused = useIsFocused();
 
-    const incrementQty = () => {
-        if (quantity >= stock) return
+      const incrementQty = () => {
+        if (stock <= quantity)
+          return Toast.show({
+            type: "error",
+            text1: "Maximum Value Added",
+          });
         setQuantity((prev) => prev + 1);
-    };
+      };
     const decrementQty = () => {
         if (quantity <= 1) return
         setQuantity((prev) => prev - 1);
     };
 
     const addToCartHandler = () => {
-        if (stock === 0) return Toast.show({
-            type: 'error',
-            text1: 'Out of Stock',
-        });
-        //dispatch here
-        Toast.show({
-            type: 'success',
-            text1: `Added ${quantity} ${quantity > 1 ? 'items' : 'item'} to cart`
-        })
+        if (stock === 0)
+            return Toast.show({
+              type: "error",
+              text1: "Out Of Stock",
+            });
+          dispatch({
+            type: "addToCart",
+            payload: {
+              product: params.id,
+              name,
+              price,
+              image: images[0]?.url,
+              stock,
+              quantity,
+            },
+          });
+          Toast.show({
+            type: "success",
+            text1: "Added To Cart",
+          });
     };
 
     useEffect(() => {

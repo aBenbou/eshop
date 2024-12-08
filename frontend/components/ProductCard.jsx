@@ -18,8 +18,8 @@ const ProductCard = ({
     activeOpacity={1}
     onPress={()=>navigate.navigate('productdetails',{id})}>
 <View style={{
-    elevation:5,
-    width:220,
+    elevation:15,
+    width:250,
     alignItems:'center',
     justifyContent:'space-between',
     margin:20,
@@ -49,7 +49,8 @@ style={{
 <Text numberOfLines={2} style={{
 color: i%2===0? colors.color2 :colors.color3,
 fontSize: 25,
-fontWeight: '300'
+fontWeight: '300',
+width:"60%"
 }}>
 {name}
 </Text>
@@ -65,11 +66,12 @@ ${price}
 <TouchableOpacity style={{
     backgroundColor: i%2===0? colors.color2 :colors.color3,
     borderRadius:0,
+    paddingVertical: 5,
     borderBottomRightRadius:20,
     borderBottomLeftRadius:20,
     width: '100%',
 }}>
-    <Button onPress={()=>addToCartHandler(id, stock)} textColor={i%2===0? colors.color1 :colors.color2}>
+    <Button onPress={()=>addToCartHandler(id, name, price, image, stock)} textColor={i%2===0? colors.color1 :colors.color2}>
         Add to Cart
     </Button>
 </TouchableOpacity>
