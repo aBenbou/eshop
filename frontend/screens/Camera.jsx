@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Camera, CameraType, CameraView } from "expo-camera";
+import { Camera, CameraView, useCameraPermissions } from "expo-camera";
 import { Avatar } from "react-native-paper";
 import { colors, defaultStyle } from "../styles/styles";
 import * as ImagePicker from "expo-image-picker";
 
 const CameraComponent = ({ navigation, route }) => {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(CameraView.back);
+  const [facing, setFacing] = useState('back');
   const [camera, setCamera] = useState(null);
+  const [permission, requestPermission] = useCameraPermissions();
 
   const openImagePicker = async () => {
     const permissionResult =
@@ -18,9 +18,9 @@ const CameraComponent = ({ navigation, route }) => {
       return alert("Permission to access gallery is required");
 
     const data = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
 
     if (route.params?.newProduct)
@@ -42,52 +42,50 @@ const CameraComponent = ({ navigation, route }) => {
       });
   };
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
-
   const clickPicture = async () => {
-    const data = await camera.takePictureAsync();
+    if (camera) {
+      try {
+        const data = await camera.takePictureAsync();
 
-    if (route.params?.newProduct)
-      return navigation.navigate("newproduct", {
-        image: data.uri,
-      });
+        if (route.params?.newProduct)
+          return navigation.navigate("newproduct", {
+            image: data.uri,
+          });
 
-    if (route.params?.updateProduct)
-      return navigation.navigate("productimages", {
-        image: data.uri,
-      });
-    if (route.params?.updateProfile)
-      return navigation.navigate("profile", {
-        image: data.uri,
-      });
-    else
-      return navigation.navigate("signup", {
-        image: data.uri,
-      });
+        if (route.params?.updateProduct)
+          return navigation.navigate("productimages", {
+            image: data.uri,
+          });
+        if (route.params?.updateProfile)
+          return navigation.navigate("profile", {
+            image: data.uri,
+          });
+        else
+          return navigation.navigate("signup", {
+            image: data.uri,
+          });
+      } catch (error) {
+        console.error("Error taking picture:", error);
+      }
+    }
   };
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
+  if (!permission) {
+    // Camera permissions are still loading
+    return <View />;
+  }
 
-
-  if (hasPermission === null) return <View />;
-
-  if (hasPermission === false)
+  if (!permission.granted) {
+    // Camera permissions are not granted yet
     return (
       <View style={defaultStyle}>
-        <Text>No access to camera</Text>
+        <Text>We need your permission to show the camera</Text>
+        <TouchableOpacity style={styles.button} onPress={requestPermission}>
+          <Text>Grant permission</Text>
+        </TouchableOpacity>
       </View>
     );
-
+  }
 
   return (
     <View
@@ -95,14 +93,13 @@ const CameraComponent = ({ navigation, route }) => {
         flex: 1,
       }}
     >
-      <Camera
-        type={type}
+      <CameraView
         style={{
           flex: 1,
           aspectRatio: 1,
         }}
-        ratio={"1:1"}
-        ref={(e) => setCamera(e)}
+        ref={(ref) => setCamera(ref)}
+        facing={facing}
       />
 
       <View
@@ -119,9 +116,7 @@ const CameraComponent = ({ navigation, route }) => {
         <MyIcon
           icon="camera-flip"
           handler={() => {
-            setType((prevType) =>
-              prevType === CameraView.back ? CameraView.front : CameraView.back
-            );
+            setFacing(current => (current === 'back' ? 'front' : 'back'));
           }}
         />
       </View>
