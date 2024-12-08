@@ -225,3 +225,28 @@ export const deleteCategory = (id) => async (dispatch) => {
     });
   }
 };
+
+export const createProduct = (formData) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "addProductRequest",
+    });
+
+    const { data } = await axios.post(`${server}/product/new`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "addProductSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "addProductFail",
+      payload: error.response.data.message,
+    });
+  }
+};
