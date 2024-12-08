@@ -5,53 +5,57 @@ import { colors, defaultStyle, formheading, inputOptions, inputStyling } from ".
 import Loader from "../../components/Loader";
 import { Button, TextInput } from "react-native-paper";
 import SelectComponent from "../../components/SelectComponent";
+import { useMessageAndErrorOther, useSetCategories } from "../../utils/hooks";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductDetails } from "../../redux/actions/productAction";
+import { updateProduct } from "../../redux/actions/otherAction";
 
 const UpdateProduct = ({ navigation, route }) => {
 
-    const loading = false;
-    const loadingOther = false;
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const [visible, setVisible] = useState(false);
 
-    const images = [
-      {
-        url: 'https://th.bing.com/th/id/R.8593980719357abc021e94c5524207ca?rik=cW86JIeD8F9ENw&riu=http%3a%2f%2fpurepng.com%2fpublic%2fuploads%2flarge%2fpurepng.com-macbookmacbooknotebookcomputersapple-inmacbook-familyapple-laptops-17015283614248ry9g.png&ehk=MbYqVcq7JPjSm9qrh0wwn02CnhDMPH4pYKDsgGor8Wg%3d&risl=&pid=ImgRaw&r=0',
-        _id: 'asfSrgaerh'
-      },
-      {
-        url: 'https://purepng.com/public/uploads/large/purepng.com-apple-iphone-xappleapple-iphonephonesmartphonemobile-devicetouch-screeniphone-xiphone-10electronicsobjects-2515306895701eqxj.png',
-        _id: 'asfghaeraerh'
-      },
-      {
-        url: 'https://th.bing.com/th/id/R.9a06a9d5fb3daddd463ae7f84b82904f?rik=rmzjFSmnzPFs%2fA&riu=http%3a%2f%2fclipart-library.com%2fimage_gallery2%2fShoes-Transparent.png&ehk=HcjBGNR%2fOAi53Ivk5xUrsK1j17ceBgSxZQbgmr50TCc%3d&risl=1&pid=ImgRaw&r=0',
-        _id: 'asfgaekruytrh'
-      },
-  ];
+    const { product, loading } = useSelector((state) => state.product);
 
   const [id] = useState(route.params.id);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [category, setCategory] = useState("Phone");
+  const [category, setCategory] = useState("");
   const [categoryID, setCategoryID] = useState("");
-  const [categories, setCategories] = useState([
-    {
-        _id:'sasalad', 
-        category:'Phone'
-    },
-    {
-        _id:'sagretsalad', 
-        category:'Cloths'
-    },
-    {
-        _id:'sasalthjrad', 
-        category:'Shoes'
-    },
-]);
-  const [visible, setVisible] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useSetCategories(setCategories, isFocused);
 
   const submitHandler = () => {
-    console.log(name, description, price, stock, categoryID);
+    dispatch(updateProduct(id, name, description, price, stock, categoryID));
   };
+
+  const loadingOther = useMessageAndErrorOther(
+    dispatch,
+    navigation,
+    "adminpanel"
+  );
+
+
+  useEffect(() => {
+    dispatch(getProductDetails(id));
+  }, [dispatch, id, isFocused]);
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setDescription(product.description);
+      setPrice(String(product.price));
+      setStock(String(product.stock));
+      setCategory(product.category?.category);
+      setCategoryID(product.category?._id);
+    }
+  }, [product]);
+
 
   return (
     <>
@@ -89,7 +93,7 @@ const UpdateProduct = ({ navigation, route }) => {
                 onPress={() =>
                   navigation.navigate("productimages", {
                     id,
-                    images: images,
+                    images: product.images,
                   })
                 }
                 textColor={colors.color1}
