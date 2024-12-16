@@ -8,9 +8,11 @@ import ProductListHeading from "../../components/ProductListHeading";
 import ProductListItem from "../../components/ProductListItem";
 import Chart from "../../components/Chart";
 import { useAdminProducts, useMessageAndErrorOther } from "../../utils/hooks";
-// import { products } from "../Home";
+import { products } from "../Home";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import { deleteProduct } from "../../redux/actions/otherAction";
+import { getAdminProducts } from "../../redux/actions/productAction";
 
 
 const AdminPanel = ({ navigation }) => {
@@ -43,8 +45,15 @@ const AdminPanel = ({ navigation }) => {
   };
 
   const deleteProductHandler = (id) => {
-    console.log(`deleting product with ID :${id}`);
+    dispatch(deleteProduct(id));
   };
+
+  const loadingDelete = useMessageAndErrorOther(
+    dispatch,
+    null,
+    null,
+    getAdminProducts
+  );
 
   return (
     <View style={defaultStyle}>
@@ -100,7 +109,7 @@ const AdminPanel = ({ navigation }) => {
 
           <ScrollView showsVerticalScrollIndicator={false}>
             <View>
-              {/*!loadingDelete &&*/
+              {!loadingDelete &&
                 products.map((item, index) => (
                   <ProductListItem
                     navigate={navigation}

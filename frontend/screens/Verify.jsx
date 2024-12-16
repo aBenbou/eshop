@@ -3,18 +3,20 @@ import React, { useState } from 'react';
 import { colors, defaultStyle, formheading, inputOptions, formStyles } from '../styles/styles';
 import { Button, TextInput } from 'react-native-paper';
 import Footer from '../components/Footer';
+import { useMessageAndErrorOther } from "../utils/hooks";
+import { useDispatch } from "react-redux";
+import { resetPassword } from "../redux/actions/otherAction";
 
 const Verify = ({navigation}) => {
 
     const [otp, setOtp] = useState('');
     const [password, setPassword] = useState('');
 
-    const loading = false;
+    const dispatch = useDispatch();
+  const loading = useMessageAndErrorOther(dispatch, navigation, "login");
 
     const submitHandler = ()=> {
-        alert ('Nice');
-        // remove this in future
-        navigation.navigate('login');
+        dispatch(resetPassword(otp, password));
     };
     
 
